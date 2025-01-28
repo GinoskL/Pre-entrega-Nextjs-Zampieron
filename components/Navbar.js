@@ -6,10 +6,10 @@ export default function Navbar() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Marca que el cliente está listo
+    setIsClient(true);  
   }, []);
 
-  if (!isClient) return null; // No renderiza nada hasta que el cliente esté listo
+  if (!isClient) return null;  
 
   return (
     <nav className="bg-blue-600 shadow">
