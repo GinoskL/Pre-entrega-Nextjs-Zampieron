@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados */
+body {
+  @apply bg-gray-50 text-gray-800;
+}
+
+/* Estilo para el layout principal */
+.layout-container {
+  @apply flex min-h-screen p-6;
+}
+
+/* Estilo para la sección de categorías */
+.categoria-aside {
+  @apply w-1/4 p-4 bg-white shadow-lg rounded-lg;
+}
+
+.categoria-aside h2 {
+  @apply text-2xl font-bold text-gray-800 mb-4 border-b pb-2;
+}
+
+.categoria-aside ul li button {
+  @apply text-blue-600 hover:text-blue-800 transition duration-300;
+}
+
+/* Sección de productos */
+.producto-container {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.producto-card {
+  @apply bg-white rounded-lg shadow-md p-4 transform transition hover:scale-105;
+}
+
+.producto-card h2 {
+  @apply text-lg font-semibold text-gray-700;
+}
+
+.producto-card p {
+  @apply text-gray-600;
+}
+
+.producto-card button {
+  @apply mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300;
+}
