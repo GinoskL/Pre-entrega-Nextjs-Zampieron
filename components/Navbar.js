@@ -6,25 +6,19 @@ export default function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   return (
-    <nav className="bg-blue-600 shadow-lg">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <nav className="bg-[var(--text-dark)] shadow-md">
+      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo y nombre de la página */}
-        <Link href="/" className="text-white text-2xl font-bold">
+        <Link href="/" className="text-[var(--primary-bg)] text-2xl font-bold">
           Mi Tienda
         </Link>
 
         {/* Botón Hamburguesa para móviles */}
         <button
-          className="block md:hidden text-white focus:outline-none"
+          className="block md:hidden text-[var(--primary-bg)] focus:outline-none"
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
-          <svg
-            className="w-6 h-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {menuAbierto ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -35,22 +29,24 @@ export default function Navbar() {
 
         {/* Menú de navegación */}
         <ul
-          className={`${
-            menuAbierto ? "block" : "hidden"
-          } absolute md:static top-16 left-0 w-full md:w-auto bg-blue-600 md:flex md:space-x-6`}
+          className={`absolute md:static top-16 left-0 w-full md:w-auto bg-[var(--text-dark)] md:flex md:space-x-6
+            ${menuAbierto ? "block" : "hidden"} md:block transition-all`}
         >
-          <li>
-            <Link href="/" className="block py-2 px-4 text-white hover:text-gray-300">Inicio</Link>
-          </li>
-          <li>
-            <Link href="/catalogo" className="block py-2 px-4 text-white hover:text-gray-300">Catálogo</Link>
-          </li>
-          <li>
-            <Link href="/carrito" className="block py-2 px-4 text-white hover:text-gray-300">Carrito</Link>
-          </li>
-          <li>
-            <Link href="/admin" className="block py-2 px-4 text-white hover:text-gray-300">Admin</Link>
-          </li>
+          {[
+            { name: "Inicio", href: "/" },
+            { name: "Catálogo", href: "/catalogo" },
+            { name: "Carrito", href: "/carrito" },
+            { name: "Admin", href: "/admin" },
+          ].map((item) => (
+            <li key={item.name}>
+              <Link
+                href={item.href}
+                className="block py-3 px-6 text-[var(--primary-bg)] hover:text-[var(--card-bg)] transition"
+              >
+                {item.name}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>

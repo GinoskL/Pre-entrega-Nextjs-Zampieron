@@ -1,68 +1,52 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
-// Crear el contexto del carrito
 const CartContext = createContext();
 
-// Proveedor del carrito
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [notification, setNotification] = useState(null); // 🔔 Nueva notificación
 
-  // Cargar carrito desde localStorage
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
-  }, []);
-
-  // Guardar carrito en localStorage cada vez que cambie
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  // Agregar producto al carrito
-  const addToCart = (product) => {
+  // Agregar producto con la cantidad seleccionada
+  const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
-      if (existingItem) {
+      const itemExistente = prevCart.find((item) => item.id === product.id);
+      if (itemExistente) {
         return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, { ...product, quantity }];
+    });
+
+    // 🔔 Notificación
+    setNotification({ product, quantity });
+    setTimeout(() => setNotification(null), 5000); // La notificación desaparece en 5s
+  };
+
+  // Eliminar 1 unidad o quitar el producto si quantity llega a 0
+  const removeFromCart = (productId, eliminarTodo = false) => {
+    setCart((prevCart) => {
+      return prevCart
+        .map((item) =>
+          item.id === productId
+            ? { ...item, quantity: eliminarTodo ? 0 : item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0);
     });
   };
 
-  // Eliminar producto del carrito
-  const removeFromCart = (id) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-  };
-
-  // Cambiar cantidad de un producto en el carrito
-  const updateQuantity = (id, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-    } else {
-      setCart((prevCart) =>
-        prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
-      );
-    }
-  };
-
-  // Vaciar el carrito
+  // Vaciar todo el carrito
   const clearCart = () => {
     setCart([]);
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, notification, setNotification }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// Hook para usar el carrito en cualquier componente
-export const useCart = () => {
-  return useContext(CartContext);
-};
+export const useCart = () => useContext(CartContext);
