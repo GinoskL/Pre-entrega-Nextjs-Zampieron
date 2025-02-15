@@ -9,29 +9,24 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false); // Estado para alternar entre login y registro
+  const [isRegistering, setIsRegistering] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isRegistering) {
-        // 🔹 REGISTRO
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 🔥 Guardar el usuario en Firestore con rol "user"
         await setDoc(doc(db, "usuarios", user.uid), {
           email: user.email,
           role: "user",
         });
-
       } else {
-        // 🔹 LOGIN
         await signInWithEmailAndPassword(auth, email, password);
       }
-
-      router.push("/admin"); // Redirige al panel de administración después del login o registro
+      router.push("/admin");
     } catch (err) {
       setError("Error: " + err.message);
     }
@@ -66,7 +61,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Botón para cambiar entre Login y Registro */}
         <button
           className="w-full mt-4 text-[var(--text-dark)] underline"
           onClick={() => setIsRegistering(!isRegistering)}
@@ -77,3 +71,4 @@ export default function Login() {
     </div>
   );
 }
+
