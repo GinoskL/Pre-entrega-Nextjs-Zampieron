@@ -6,16 +6,16 @@ export default function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   return (
-    <nav className="bg-[var(--text-dark)] shadow-md">
+    <nav className="bg-[#27445D] shadow-md">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo y nombre de la página */}
-        <Link href="/" className="text-[var(--primary-bg)] text-2xl font-bold">
+        {/* Logo */}
+        <Link href="/" className="text-[#EFE9D5] text-2xl font-bold tracking-wide">
           Mi Tienda
         </Link>
 
-        {/* Botón Hamburguesa para móviles */}
+        {/* Botón Hamburguesa */}
         <button
-          className="block md:hidden text-[var(--primary-bg)] focus:outline-none"
+          className="block md:hidden text-[#EFE9D5] focus:outline-none"
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
           <svg className="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +29,7 @@ export default function Navbar() {
 
         {/* Menú de navegación */}
         <ul
-          className={`absolute md:static top-16 left-0 w-full md:w-auto bg-[var(--text-dark)] md:flex md:space-x-6
+          className={`absolute md:static top-16 left-0 w-full md:w-auto bg-[#27445D] md:flex md:space-x-6
             ${menuAbierto ? "block" : "hidden"} md:block transition-all`}
         >
           {[
@@ -41,7 +41,7 @@ export default function Navbar() {
             <li key={item.name}>
               <Link
                 href={item.href}
-                className="block py-3 px-6 text-[var(--primary-bg)] hover:text-[var(--card-bg)] transition"
+                className="block py-3 px-6 text-[#EFE9D5] hover:text-[#e9d8a9] transition"
               >
                 {item.name}
               </Link>

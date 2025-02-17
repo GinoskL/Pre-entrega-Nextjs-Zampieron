@@ -5,36 +5,31 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const [notification, setNotification] = useState(null); // 🔔 Nueva notificación
+  const [notification, setNotification] = useState(null); // 🔔 Notificación
 
-  // Agregar producto con la cantidad seleccionada
+  // Agregar producto al carrito con uniqueId
   const addToCart = (product, quantity = 1) => {
-    setCart((prevCart) => {
-      const itemExistente = prevCart.find((item) => item.id === product.id);
-      if (itemExistente) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
-        );
-      }
-      return [...prevCart, { ...product, quantity }];
-    });
+    setCart((prevCart) => [
+      ...prevCart,
+      { ...product, quantity, uniqueId: `${product.id}-${Date.now()}` }, // Genera un ID único
+    ]);
 
     // 🔔 Notificación
     setNotification({ product, quantity });
-    setTimeout(() => setNotification(null), 5000); // La notificación desaparece en 5s
+    setTimeout(() => setNotification(null), 5000);
   };
 
-  // Eliminar 1 unidad o quitar el producto si quantity llega a 0
-  const removeFromCart = (productId, eliminarTodo = false) => {
-    setCart((prevCart) => {
-      return prevCart
+  // Eliminar solo 1 unidad o todo el producto si eliminarTodo es true
+  const removeFromCart = (uniqueId, eliminarTodo = false) => {
+    setCart((prevCart) =>
+      prevCart
         .map((item) =>
-          item.id === productId
+          item.uniqueId === uniqueId
             ? { ...item, quantity: eliminarTodo ? 0 : item.quantity - 1 }
             : item
         )
-        .filter((item) => item.quantity > 0);
-    });
+        .filter((item) => item.quantity > 0)
+    );
   };
 
   // Vaciar todo el carrito
@@ -43,7 +38,9 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, notification, setNotification }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart, notification, setNotification }}
+    >
       {children}
     </CartContext.Provider>
   );

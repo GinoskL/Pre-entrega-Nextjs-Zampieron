@@ -23,7 +23,6 @@ const ProductDetails = () => {
         if (docSnap.exists()) {
           setProduct(docSnap.data());
         } else {
-          console.log("Producto no encontrado");
           setProduct(null);
         }
       } catch (error) {
@@ -42,26 +41,29 @@ const ProductDetails = () => {
   if (!product) return <p className="text-center text-red-500 text-lg mt-10">Producto no encontrado</p>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      {/* Notificación flotante */}
+    <div className="flex justify-center items-center min-h-screen p-6 bg-[#EFE9D5]">
+      {/* 🔹 Notificación flotante mejorada */}
       {notification && (
-        <div className="fixed top-4 right-4 bg-white shadow-lg p-4 rounded-lg flex items-center gap-4 border-2 border-[#497D74]">
-          <p className="text-[#27445D]">
+        <div className="fixed top-4 right-4 bg-[#71BBB2] text-[#27445D] px-4 py-2 rounded-lg shadow-lg flex items-center gap-4 border border-[#497D74]">
+          <p>
             {notification.quantity}x <strong>{notification.product.name}</strong> agregado al carrito
           </p>
           <button
             onClick={() => removeFromCart(notification.product.id, true)}
-            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
           >
             ❌
           </button>
           <Link href="/carrito">
-            <button className="button">🛒</button>
+            <button className="bg-[#497D74] text-white px-3 py-1 rounded hover:bg-[#27445D] transition">
+              🛒
+            </button>
           </Link>
         </div>
       )}
 
-      <div className="card max-w-2xl w-full text-[#27445D]">
+      {/* 🔹 Tarjeta del producto */}
+      <div className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-lg">
         <div className="w-full flex justify-center">
           <img
             src={product.image || "/placeholder.jpg"}
@@ -71,32 +73,32 @@ const ProductDetails = () => {
         </div>
 
         <div className="mt-6 text-center">
-          <h1 className="text-2xl font-semibold">{product.name}</h1>
-          <p className="text-sm mt-2">{product.description}</p>
-          <p className="text-sm mt-1">Categoría: {product.category}</p>
-          <p className="text-3xl font-bold text-[#27445D] mt-4">${product.price}</p>
+          <h1 className="text-3xl font-semibold text-[#27445D]">{product.name}</h1>
+          <p className="text-gray-700 mt-2">{product.description}</p>
+          <p className="text-sm mt-1 font-semibold">Categoría: {product.category}</p>
+          <p className="text-4xl font-bold text-[#497D74] mt-4">${product.price}</p>
         </div>
 
-        {/* Selector de cantidad */}
+        {/* 🔹 Selector de cantidad mejorado */}
         <div className="mt-6 flex items-center justify-center gap-4">
           <button
-            className="bg-gray-300 text-gray-800 px-3 py-1 rounded-l"
+            className="bg-[#497D74] text-white px-3 py-2 rounded-l hover:bg-[#294742] transition"
             onClick={() => setCantidad((prev) => Math.max(prev - 1, 1))}
           >
             -
           </button>
-          <span className="px-4 py-2 border border-gray-300">{cantidad}</span>
+          <span className="px-6 py-2 border border-[#497D74] text-lg font-semibold">{cantidad}</span>
           <button
-            className="bg-gray-300 text-gray-800 px-3 py-1 rounded-r"
+            className="bg-[#497D74] text-white px-3 py-2 rounded-r hover:bg-[#294742] transition"
             onClick={() => setCantidad((prev) => prev + 1)}
           >
             +
           </button>
         </div>
 
-        {/* Botón de agregar al carrito */}
+        {/* 🔹 Botón de agregar al carrito mejorado */}
         <button
-          className="mt-6 button w-full"
+          className="mt-6 w-full bg-[#27445D] text-white py-3 rounded-lg hover:bg-[#142431] transition font-semibold text-lg"
           onClick={() => addToCart(product, cantidad)}
         >
           Agregar al carrito
@@ -107,3 +109,4 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
