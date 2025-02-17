@@ -1,20 +1,28 @@
-import Link from "next/link";
+import Link from "next/link"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export default function ProductCard({ product }) {
   return (
-    <div className="bg-[#EFE9D5] shadow-lg rounded-lg p-5 text-[#27445D] hover:scale-105 transition-transform duration-200">
-      <img
-        src={product.image || "/placeholder.jpg"}
-        alt={product.name}
-        className="h-40 w-full object-cover rounded-lg"
-      />
-      <h2 className="mt-4 text-xl font-semibold">{product.name}</h2>
-      <p className="text-lg font-bold">${product.price.toFixed(2)}</p>
-      <Link href={`/catalogo/${product.id}`}>
-        <button className="mt-4 w-full bg-[#497D74] text-white py-2 px-4 rounded-lg hover:bg-[#71BBB2] transition">
-          Ver Producto
-        </button>
-      </Link>
-    </div>
-  );
+    <Card className="group overflow-hidden bg-white p-4">
+      <div className="aspect-square relative bg-gray-100 rounded-lg mb-4">
+        <img
+          src={product.image || "/placeholder.svg?height=400&width=400"}
+          alt={product.name}
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
+      <div>
+        <h3 className="font-semibold text-lg text-[#27445D]">{product.name}</h3>
+        <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-bold text-[#497D74]">${product.price}</span>
+          <Button variant="outline" size="sm" asChild className="hover:bg-[#71BBB2] hover:text-white">
+            <Link href={`/catalogo/${product.id}`}>Ver Detalles</Link>
+          </Button>
+        </div>
+      </div>
+    </Card>
+  )
 }
+
