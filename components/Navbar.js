@@ -5,10 +5,12 @@ import { ShoppingCart, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useCart } from "@/app/context/CartContext"
+import { UserMenu } from "./user-menu"
 
 const routes = [
   { name: "Inicio", path: "/" },
   { name: "Catálogo", path: "/catalogo" },
+  { name: "Nosotros", path: "/nosotros" },
   { name: "Admin", path: "/admin" },
 ]
 
@@ -61,7 +63,8 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" asChild className="text-white hover:text-[#71BBB2] relative">
+          <UserMenu />
+          <Button variant="ghost" size="icon" asChild className="text-white hover:text-[#32413f] relative">
             <Link href="/carrito">
               <ShoppingCart className="h-5 w-5" />
               {cartItemCount > 0 && (
