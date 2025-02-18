@@ -30,7 +30,7 @@ export default function Home() {
       <div className="relative h-[500px] rounded-lg overflow-hidden mb-12 bg-[#497D74]">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 flex items-center">
           <div className="p-8 md:p-12 lg:p-16">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Bienvenido a TechStore</h1>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Bienvenido a TechNexa</h1>
             <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-xl">
               Descubre lo último en tecnología y gadgets. Calidad premium, precios competitivos.
             </p>

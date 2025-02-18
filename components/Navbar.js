@@ -51,7 +51,7 @@ export default function Navbar() {
         </Sheet>
 
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold text-xl">TechStore</span>
+          <span className="font-bold text-xl">TechNexa</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium flex-1">
