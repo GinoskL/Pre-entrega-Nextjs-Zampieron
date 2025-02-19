@@ -18,10 +18,22 @@ export const CartProvider = ({ children }) => {
 
   // Agregar producto al carrito con cantidad y uniqueId
   const addToCart = (product, quantity = 1) => {
-    setCart((prevCart) => [
-      ...prevCart,
-      { ...product, quantity, uniqueId: `${product.id}-${Date.now()}` }, // Genera un ID único
-    ]);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        return [
+          ...prevCart,
+          { ...product, quantity, uniqueId: `${product.id}-${Date.now()}` },
+        ];
+      }
+    });
 
     // 🔔 Notificación de producto agregado
     setNotification({ product, quantity });
@@ -41,18 +53,14 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Actualizar la cantidad de un producto en el carrito
-  const updateCartItemQuantity = (itemId, newQuantity) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
   // Vaciar todo el carrito
   const clearCart = () => {
     setCart([]);
+  };
+
+  // Obtener el total del carrito (precio total)
+  const getCartTotal = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   // Obtener el total de productos en el carrito
@@ -64,8 +72,8 @@ export const CartProvider = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
-        updateCartItemQuantity,
         clearCart,
+        getCartTotal,
         cartItemCount,
         notification,
         setNotification,

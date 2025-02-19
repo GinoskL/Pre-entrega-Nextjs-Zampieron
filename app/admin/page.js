@@ -18,6 +18,7 @@ export default function Admin() {
   const [descripcion, setDescripcion] = useState("")
   const [precio, setPrecio] = useState("")
   const [categoria, setCategoria] = useState("Dispositivos Electrónicos")
+  const [imageUrl, setImageUrl] = useState("")
   const [editingProduct, setEditingProduct] = useState(null)
   const [notification, setNotification] = useState(null)
   const router = useRouter()
@@ -62,48 +63,32 @@ export default function Admin() {
 
   const agregarProducto = async (e) => {
     e.preventDefault()
-    if (!nombre || !descripcion || !precio) {
+    if (!nombre || !descripcion || !precio || !imageUrl) {
       showNotification("Todos los campos son obligatorios.", "error")
       return
     }
     try {
+      const productData = {
+        name: nombre,
+        description: descripcion,
+        price: Number.parseFloat(precio),
+        category: categoria,
+        image: imageUrl,
+      }
+
       if (editingProduct) {
-        await updateDoc(doc(db, "productos", editingProduct.id), {
-          name: nombre,
-          description: descripcion,
-          price: Number.parseFloat(precio),
-          category: categoria,
-        })
-        setProductos(
-          productos.map((p) =>
-            p.id === editingProduct.id
-              ? { ...p, name: nombre, description: descripcion, price: Number.parseFloat(precio), category: categoria }
-              : p,
-          ),
-        )
+        await updateDoc(doc(db, "productos", editingProduct.id), productData)
+        setProductos(productos.map((p) => (p.id === editingProduct.id ? { ...p, ...productData } : p)))
       } else {
-        const docRef = await addDoc(collection(db, "productos"), {
-          name: nombre,
-          description: descripcion,
-          price: Number.parseFloat(precio),
-          category: categoria,
-        })
-        setProductos([
-          ...productos,
-          {
-            id: docRef.id,
-            name: nombre,
-            description: descripcion,
-            price: Number.parseFloat(precio),
-            category: categoria,
-          },
-        ])
+        const docRef = await addDoc(collection(db, "productos"), productData)
+        setProductos([...productos, { id: docRef.id, ...productData }])
       }
       showNotification(editingProduct ? "Producto actualizado con éxito" : "Producto agregado con éxito")
       setNombre("")
       setDescripcion("")
       setPrecio("")
       setCategoria("Dispositivos Electrónicos")
+      setImageUrl("")
       setEditingProduct(null)
     } catch (error) {
       console.error("❌ Error al agregar producto:", error)
@@ -117,6 +102,7 @@ export default function Admin() {
     setDescripcion(producto.description)
     setPrecio(producto.price.toString())
     setCategoria(producto.category)
+    setImageUrl(producto.image || "")
   }
 
   const eliminarProducto = async (id) => {
@@ -190,6 +176,21 @@ export default function Admin() {
                   <SelectItem value="Accesorios">Accesorios</SelectItem>
                 </SelectContent>
               </Select>
+              <Input
+                placeholder="URL de la imagen"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                className="bg-[#71BBB2] text-[#27445D] placeholder-[#27445D]"
+              />
+              {imageUrl && (
+                <div className="mt-2">
+                  <img
+                    src={imageUrl || "/placeholder.svg"}
+                    alt="Vista previa"
+                    className="max-w-full h-auto rounded-lg"
+                  />
+                </div>
+              )}
               <Button type="submit" className="w-full bg-[#EFE9D5] text-[#27445D] hover:bg-[#FFF4D9]">
                 {editingProduct ? "Guardar Cambios" : "Agregar Producto"}
               </Button>
@@ -202,29 +203,33 @@ export default function Admin() {
             <h2 className="text-2xl font-bold">Productos en la Tienda</h2>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {productos.map((producto) => (
-                <li
-                  key={producto.id}
-                  className="bg-[#71BBB2] text-[#27445D] p-4 rounded-lg shadow flex justify-between items-center"
-                >
-                  <div>
-                    <h3 className="font-semibold">{producto.name}</h3>
-                    <p className="text-sm">
+                <Card key={producto.id} className="bg-[#71BBB2] text-[#27445D] overflow-hidden">
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img
+                      src={producto.image || "/placeholder.svg"}
+                      alt={producto.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-lg mb-2">{producto.name}</h3>
+                    <p className="text-sm mb-2">
                       {producto.category} - ${producto.price}
                     </p>
-                  </div>
-                  <div>
-                    <Button variant="outline" size="sm" onClick={() => editarProducto(producto)} className="mr-2">
-                      Editar
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => eliminarProducto(producto.id)}>
-                      Eliminar
-                    </Button>
-                  </div>
-                </li>
+                    <div className="flex justify-between items-center">
+                      <Button variant="outline" size="sm" onClick={() => editarProducto(producto)}>
+                        Editar
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => eliminarProducto(producto.id)}>
+                        Eliminar
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
-            </ul>
+            </div>
           </CardContent>
         </Card>
       </div>
